@@ -1,18 +1,51 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GlassBehavior : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] bool isRightWallTouched;
+    [SerializeField] bool isLeftWallTouched;
+    [SerializeField] bool isInMid;
+
+    private void Start()
     {
-        
+        isInMid = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        GlassMovement();
+    }
+
+    void GlassMovement()
+    {
+        if (isInMid)
+        {
+            transform.Translate(Vector2.right * 2f * Time.deltaTime);
+        }
+        else if (isRightWallTouched)
+        {
+            transform.Translate(Vector2.left * 2f * Time.deltaTime);
+        }
+        else if (isLeftWallTouched)
+        {
+            transform.Translate(Vector2.right * 2f * Time.deltaTime);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if(other.transform.name == "RightBorder")
+        {
+            isInMid = false;
+            isLeftWallTouched = false;
+            isRightWallTouched = true;
+        }
+        if(other.transform.name == "LeftBorder")
+        {
+            isInMid = false;
+            isRightWallTouched = false;
+            isLeftWallTouched = true;
+        }
     }
 }
